@@ -34,7 +34,7 @@ onMounted(async () => {
       >
     </div>
 
-    <div class="file-list__content">
+    <div v-else class="file-list__content">
       <div class="file-list__row file-list__row--header">
         <div class="file-list__row-inner file-list-grid light-text">
           <div class="file-list__header-name">File name</div>

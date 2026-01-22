@@ -27,31 +27,30 @@ onMounted(async () => {
       <h1 class="title light-text">No files in storage</h1>
     </div>
 
-    <div
-      v-else-if="fileStore.loadError"
-      class="file-list__error"
-    >
+    <div v-else-if="fileStore.loadError" class="file-list__error">
       <h1 class="title light-text">{{ fileStore.loadError }}</h1>
-      <Button @click="fileStore.loadFiles" class="file-list__retry">Try again</Button>
+      <Button @click="fileStore.loadFiles" class="file-list__retry"
+        >Try again</Button
+      >
     </div>
-    
-    <table v-else class="file-list__table">
-      <thead class="file-list__thead light-text">
-        <tr class="file-list__row file-list__row--header">
-          <th class="file-list__cell" colspan="2">File name</th>
-          <th class="file-list__cell">File size</th>
-          <th class="file-list__cell" colspan="2">Date uploaded</th>
-        </tr>
-      </thead>
-      <tbody class="files-table__tbody">
-        <FileRow
-          class="file-list__row"
-          v-for="(file, index) in fileStore.files"
-          :key="index"
-          :file="file"
-        />
-      </tbody>
-    </table>
+
+    <div class="file-list__content">
+      <div class="file-list__row file-list__row--header">
+        <div class="file-list__row-inner file-list-grid light-text">
+          <div class="file-list__header-name">File name</div>
+          <div class="file-list__header-size">File size</div>
+          <div class="file-list__header-date">Date uploaded</div>
+        </div>
+      </div>
+
+      <FileRow
+        class="file-list__row"
+        v-for="(file, index) in fileStore.files"
+        :key="index"
+        :file="file"
+        :index="index"
+      />
+    </div>
   </div>
 </template>
 
@@ -65,60 +64,27 @@ onMounted(async () => {
   transform: translate(-50%, -50%);
 }
 
-
-.file-list__cell:first-child {
-  width: 40px;
-}
-.file-list__table {
-  width: 100%;
-  border-collapse: collapse;
-  text-align: left;
+.file-list__content {
+  margin: 0 -40px;
 }
 
 .file-list__row {
-  position: relative;
+  border-bottom: 1px solid #EAECF0;
 }
 
-.file-list__row::before {
-  content: "";
-  position: absolute;
-  left: -40px;
-  top: 0;
-  bottom: 0;
-  right: -40px;
-  z-index: -1;
-  border-top: 1px solid var(--color-light-grey);
+.file-list__row-inner {
+  padding: 0 40px;
 }
 
-.file-list__row:last-child::before {
-  border-bottom: 1px solid var(--color-light-grey);
-}
-
-.file-list__row:nth-child(odd)::before {
-  background-color: #f9fafb;
-}
-
-.file-list__row--header::before {
-  background-color: transparent !important;
-  border: none !important;
-}
-
-th {
+.file-list__row--header {
   padding: 13px 0;
 }
 
-.file-list__error {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 1rem;
+.file-list__header-name {
+  grid-column: 1 / span 2;
 }
 
-@media (max-width: 500px) {
-  .file-list__row::before {
-    right: -15px;
-    left: -15px;
-  }
+.file-list__header-date {
+  grid-column: 4 / span 2;
 }
 </style>

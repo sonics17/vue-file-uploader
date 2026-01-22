@@ -9,3 +9,10 @@ body {
   font-size: var(--font-size-m);
   color: var(--text-color-primary);
 }
+
+.file-list-grid {
+  display: grid;
+  grid-template-columns: 40px 3fr 1fr 1fr 22px;
+  align-items: center;
+  gap: 12px;
+}

@@ -1,1 +1,1 @@
-# vue-file-upload
+# vue-file-uploader

@@ -1,0 +1,11 @@
+@import './reset.css';
+@import './variables.css';
+@import './typography.css';
+
+body {
+  font-family: sans-serif;
+  line-height: var(--line-height-150);
+  font-weight: var(--font-weight-regular);
+  font-size: var(--font-size-m);
+  color: var(--text-color-primary);
+}

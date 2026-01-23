@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 import { supabase } from "@/lib/supabaseClient";
+import { transliterate } from "@/utils/translit"
 
 export const useFileStore = defineStore("fileStore", () => {
   const files = ref([]);
@@ -12,18 +13,19 @@ export const useFileStore = defineStore("fileStore", () => {
   const isStorageEmpty = computed(() => files.value.length === 0);
 
   const uploadFile = async (file) => {
-    let fileName = file.name;
+    const originalFileName = file.name;
+    const transliteratedFileName = transliterate(file.name)
 
     const { data, error } = await supabase.storage
       .from("files")
-      .upload(file.name, file);
+      .upload(transliteratedFileName, file);
 
     if (error) {
       return {
         success: false,
         error: {
           errorMessage: getUploadErrorMessage(error),
-          fileName: fileName,
+          fileName: originalFileName,
         },
       };
     } else {

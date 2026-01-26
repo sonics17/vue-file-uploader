@@ -17,7 +17,7 @@ watch(
   (newVal) => {
     if (newVal && newVal !== "") {
       setTimeout(() => {
-        fileStore.deleteFileError = "";
+        fileStore.clearDeleteError();
       }, 3000);
     }
   },
@@ -29,7 +29,7 @@ watch(
     <ErrorToast
       v-if="fileStore.deleteFileError"
       :message="fileStore.deleteFileError"
-      @close="fileStore.deleteFileError = ''"
+      @close="fileStore.clearDeleteError()"
     />
 
     <div class="page-header">

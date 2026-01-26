@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 import { supabase } from "@/lib/supabaseClient";
-import { transliterate } from "@/utils/translit"
+import { transliterate } from "@/utils/translit";
 
 export const useFileStore = defineStore("fileStore", () => {
   const files = ref([]);
@@ -12,9 +12,29 @@ export const useFileStore = defineStore("fileStore", () => {
 
   const isStorageEmpty = computed(() => files.value.length === 0);
 
+  const validateFile = (file) => {
+    const MAX_FILE_SIZE = 20 * 1024 * 1024;
+
+    if (file.size > MAX_FILE_SIZE) {
+      return "The file is too large. Maximum: 20MB";
+    }
+    return null;
+  };
+
   const uploadFile = async (file) => {
     const originalFileName = file.name;
-    const transliteratedFileName = transliterate(file.name)
+    const transliteratedFileName = transliterate(file.name);
+
+    const validationError = validateFile(file);
+    if (validationError) {
+      return {
+        success: false,
+        error: {
+          errorMessage: validationError,
+          fileName: originalFileName,
+        },
+      };
+    }
 
     const { data, error } = await supabase.storage
       .from("files")
@@ -68,7 +88,7 @@ export const useFileStore = defineStore("fileStore", () => {
         errorMessage = "A file with this name already exists";
         break;
       case "404":
-        errorMessage = "Storage not found. Check the settings";
+        errorMessage = "Storage not found";
         break;
       case "400":
         errorMessage = "Invalid file name";
@@ -87,6 +107,9 @@ export const useFileStore = defineStore("fileStore", () => {
       const { data, error } = await supabase.storage.from("files").list("");
       if (error) {
         loadError.value = "Can't load files from storage";
+      } else if (!data) {
+        files.value = [];
+        filesLoaded.value = true;
       } else {
         files.value = data.filter(
           (file) => file.name !== ".emptyFolderPlaceholder",
@@ -117,6 +140,10 @@ export const useFileStore = defineStore("fileStore", () => {
     return data.publicUrl;
   };
 
+  const clearDeleteError = () => {
+    deleteFileError.value = "";
+  };
+
   return {
     files,
     isLoading,
@@ -129,5 +156,6 @@ export const useFileStore = defineStore("fileStore", () => {
     loadFiles,
     deleteFile,
     getFileUrl,
+    clearDeleteError,
   };
 });

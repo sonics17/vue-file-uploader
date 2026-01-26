@@ -21,7 +21,7 @@
 import { ref } from "vue";
 import Button from "../ui/Button.vue";
 
-const emit = defineEmits(["allSuccess", "hasError", "files-selected"]);
+const emit = defineEmits(["files-selected"]);
 
 const fileInput = ref(null);
 
